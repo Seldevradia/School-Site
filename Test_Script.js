@@ -1,8 +1,9 @@
+const conteiner = document.getElementById("conteiner");
 const test = document.getElementById("test");
 const button = document.getElementById("button");
 const question_name = document.getElementById("question_name");
-var submit_btn = document.getElementById("submit_btn");
-const end_text = document.getElementById("end");
+var btn_txt = document.getElementById("submit_btn");
+
 
 let quests_answs = [];
 quests_answs.push(["radio", "Question 1", ["answ1", "answ2", "answ3", "answ4"], 2]);
@@ -20,10 +21,8 @@ var score = 0;
 
 
 
-function clearPage() {
-    test.innerHTML="";
-    question_name.innerHTML="";
-    button.innerHTML="";
+function create_EndText() {
+    conteiner.innerHTML = `<div id="end"></div>`;
 }
 
 function clearTest() {
@@ -81,23 +80,17 @@ function calculate() {
         let localScore = 0
         switch (quests_answs[i][0]) {
             case "radio":
-                console.log("rad");
                 if (answers[i] == quests_answs[i][3]) {
                     localScore ++;
                 }
                 break;
             case "checkbox":
-                console.log("check");
                 for (var l = 0; l<answers[i].length; l++) {
-                    console.log(quests_answs[i][3]);
-                    console.log(answers[i][l]);
-                    for (var j = 0; j < quests_answs[i][3].length; j++) {
-                        if (quests_answs[i][3][j] === answers[i][l]) {
-                            localScore += 0.5;
-                        }
-                        else {
-                            localScore -= 0.5;
-                        }
+                    if (quests_answs[i][3].find((i) => i === answers[i][l]) != -1) {
+                        localScore += 0.5;
+                    }
+                    else {
+                        localScore -= 0.5;
                     }
                 }
         }
@@ -140,12 +133,16 @@ submit_btn.addEventListener("click", function() {
         next_quest++;
     }
 
+    if (next_quest == quests_answs.length) {
+        btn_txt.innerHTML = "End Test";
+    }
+
     }
     if (next_quest == quests_answs.length+1) {
-        clearPage();
+        create_EndText();
         calculate();
-        end_text.innerHTML = "Right answers: " + score;
-        end_text.innerHTML += " Your grade is " + (score / 8 * 12);
+        const end_text = document.getElementById("end");
+        end_text.innerHTML = " Your grade is " + (score / 8 * 12);
     }
 }
 )
